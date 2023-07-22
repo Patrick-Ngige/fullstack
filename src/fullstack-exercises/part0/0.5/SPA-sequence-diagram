@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    
+    browser->>server: GET, https://studies.cs.helsinki.fi/exampleapp/spa
+    server-->>+browser: the single page app html document is returned
+
+    browser->>server: GET, https://studies.cs.helsinki.fi/exampleapp/spa
+    server-->>+browser: the css file is retrieved
+
+    browser->>server: GET, https://studies.cs.helsinki.fi/exampleapp/spa
+    server-->>+browser: the JavaScripts file of the spa is retrieved
+    
+    browser->>server: GET, https://studies.cs.helsinki.fi/exampleapp/spa
+    server-->>+browser: The JSON file containing the notes is retrieved using Javascript code and displayed on the page
