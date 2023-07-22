@@ -1,0 +1,26 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    //when the button is clicked, the new_note is sent to the server
+    browser->>server: POST, https://studies.cs.helsinki.fi/exampleapp/new_note
+
+    //then the browser requests for the updated notes
+    browser->>server: GET, https://studies.cs.helsinki.fi/exampleapp/notes
+    //after the server sends the HTML document the server deactivates
+    server-->>+browser: HTML document that contain the page structure
+    
+    //activate the server to find the stylings of the HTML document
+    browser->>server: GET, https://studies.cs.helsinki.fi/exampleapp/main.css
+    //the server fetches and returns the css file and then deactivates
+    server-->>+browser: the css file
+
+    //the server is activated to fetch the js file
+    browser->>server: GET, https://studies.cs.helsinki.fi/exampleapp/main.js
+    //the server returns the js file of the server and deactivates
+    server-->>+browser: the JavaScripts file
+
+    //the browser fetches the JSON from server using the JavaScript code
+    browser->>server: GET, https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+  
