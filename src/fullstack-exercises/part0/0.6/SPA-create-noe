@@ -1,0 +1,6 @@
+sequenceDiagram
+    participant browser
+    participant server
+    
+    #the browser sents an application file to the server containing the only change on the notes
+    browser->>server: POST, https://studies.cs.helsinki.fi/exampleapp/spa
