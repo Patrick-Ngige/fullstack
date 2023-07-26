@@ -19,7 +19,7 @@ const Content = (props) => {
 const TotalExercises = ({exercises1=10, exercises2=7, exercises3=14}) => {
   return( 
     <>
-    <p>{exercises1 + exercises2 + exercises3}</p>
+    <p>TotalExercises = {exercises1 + exercises2 + exercises3}</p>
     </>
   )
 }
