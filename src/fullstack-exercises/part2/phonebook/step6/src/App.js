@@ -1,26 +1,32 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 
-const Person = ({person}) => {
+const Person = (props) => {
+  console.log(props)
   return (
     <>
-    <p>{person.name}: {person.phoneNumber.number}</p>
+    <p>{props.person.name}: {props.person.number}</p>
+    
     </>
   )
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-     phoneNumber: {number: '+25470000001'} },
-     { name: 'Ada Lovelace', phoneNumber: {number: '39-44-5323523', id: 2} },
-     { name: 'Dan Abramov', phoneNumber: {number: '12-43-234345', id: 3} },
-     { name: 'Mary Poppendieck', phoneNumber: {number: '39-23-6423122', id: 4} }
-  ]) 
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newPhoneNumber, setNewPhoneNumber] = useState('')
   const [searchTerm, setSearchTerm] = useState('');
 
+  useEffect(() => {
+    console.log('effect')
+    axios
+    .get('http://localhost:3001/persons')
+    .then(response => {
+      console.log('promise fullfilled')
+      setPersons(response.data.persons)
+    })
+  }, [])
 
   const addPerson = (e) => {
     e.preventDefault()
@@ -52,10 +58,9 @@ const App = () => {
     setSearchTerm(e.target.value)
   }
 
-  const filteredPersons = persons.filter((person) => 
-  person.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPersons = persons.filter((persons) => 
+  persons.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
-
   return (
     <div>
       <h2>Phonebook</h2>
