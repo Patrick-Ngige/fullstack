@@ -1,84 +1,74 @@
-import { useState } from 'react'
-
-
-const Person = ({person}) => {
-  return (
-    <>
-    <p>{person.name}: {person.phoneNumber.number}</p>
-    </>
-  )
-}
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import Note from './components/Note';
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-     phoneNumber: {number: '+25470000001'} },
-     { name: 'Ada Lovelace', phoneNumber: {number: '39-44-5323523', id: 2} },
-     { name: 'Dan Abramov', phoneNumber: {number: '12-43-234345', id: 3} },
-     { name: 'Mary Poppendieck', phoneNumber: {number: '39-23-6423122', id: 4} }
-  ]) 
-  const [newName, setNewName] = useState('')
-  const [newPhoneNumber, setNewPhoneNumber] = useState('')
-  const [searchTerm, setSearchTerm] = useState('');
+  const [notes, setNotes] = useState([])
+  const [newNote, setNewNote] = useState('')
+  const [showAll, setShowAll] = useState(true)
 
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/notes')
+      .then(response => {
+        setNotes(response.data)
+      })
+  }, [])
 
-  const addPerson = (e) => {
-    e.preventDefault()
-    const newPerson = {
-      name: newName,
-      phoneNumber: { number: newPhoneNumber}
+  const addNote = (event) => {
+    event.preventDefault()
+    const noteObject = {
+      content: newNote,
+      important: Math.random() > 0.5,
     }
 
-    const personExists = persons.filter((person) => person.name === newName);
-
-   if (personExists.length > 0) { 
-	 alert(`${newName} is already added to the phonebook`);
-   } else {
-	 setPersons([...persons, newPerson]);
-   }
-    setNewName('')
-    setNewPhoneNumber('')
+    axios
+      .post('http://localhost:3001/notes', noteObject)
+      .then(response => {
+        setNotes(notes.concat(response.data))
+        setNewNote('')
+      })
   }
 
-  const handleNewPerson = (e) => {
-    setNewName(e.target.value)
+  const handleNoteChange = (event) => {
+    setNewNote(event.target.value)
   }
 
-  const handleNewPhoneNumber = (e) => {
-    setNewPhoneNumber(e.target.value)
+  const toggleImportanceOf = id => {
+    const url = `http://localhost:3001/notes/${id}`
+    const note = notes.find(n => n.id === id)
+    const changedNote = { ...note, important: !note.important }
+  
+    axios.put(url, changedNote).then(response => {
+      setNotes(notes.map(n => n.id !== id ? n : response.data))
+    })
   }
 
-  const handleSearchTerm = (e) => {
-    setSearchTerm(e.target.value)
-  }
-
-  const filteredPersons = persons.filter((person) => 
-  person.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const notesToShow = showAll
+    ? notes
+    : notes.filter(note => note.important)
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Notes</h1>
       <div>
-        <p>Search: <input value={searchTerm} onChange={handleSearchTerm}/></p>
-      </div>
-      <div>
-          <button type="search">Search</button>
-        </div>
-      <form onSubmit={addPerson}>
-        <h2>Add new</h2>
-        <div>
-          <p>name: <input value={newName} onChange={handleNewPerson}/></p>
-          <p>number: <input value={newPhoneNumber} onChange={handleNewPhoneNumber}/></p>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
+        <button onClick={() => setShowAll(!showAll)}>
+          show {showAll ? 'important' : 'all' }
+        </button>
+      </div> 
+      <ul>
+        <ul>
+          {notesToShow.map(note => 
+            <Note key={note.id} note={note} 
+            toggleImportance={() => toggleImportanceOf(note.id)}
+            />
+          )}
+        </ul>
+      </ul>
+      <form onSubmit={addNote}>
+        <input value={newNote} onChange={handleNoteChange} />
+        <button type="submit">save</button>
       </form>
-      <h2>Numbers</h2>  
-          {filteredPersons.map((person, index) => (
-            <Person key={index} person={person}  />
-          ))}
     </div>
   )
 }
