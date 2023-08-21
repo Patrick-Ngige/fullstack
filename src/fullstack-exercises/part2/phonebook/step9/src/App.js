@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import crud from './services/persons';
 
-const Person = ({ name, number }) => {
+const Person = ({ name, number,  onDelete }) => {
   return (
     <>
       <p>
-        {name}: {number}
+        {name}: {number} <button onClick={onDelete}>Delete</button>
       </p>
+      
     </>
   );
 };
@@ -45,6 +46,19 @@ const App = () => {
       .catch(error => {
         console.error('Error adding new person:', error);
       });
+  };
+
+  const deletePerson = id => {
+    if (window.confirm('Are you sure you want to delete this person?')) {
+      crud
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id));
+        })
+        .catch(error => {
+          console.error('Error deleting person:', error);
+        });
+    }
   };
 
   const handleNewPerson = e => {
@@ -90,7 +104,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       {filteredPersons.map((person, index) => (
-        <Person key={index} name={person.name} number={person.number} />
+        <Person key={index} name={person.name} number={person.number} onDelete={() => deletePerson(person.id)}/>
       ))}
     </div>
   );
