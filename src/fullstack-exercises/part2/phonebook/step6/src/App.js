@@ -37,7 +37,7 @@ const App = () => {
     e.preventDefault()
     const newPerson = {
       name: newName,
-      phoneNumber: { number: newPhoneNumber}
+      number:  newPhoneNumber,
     }
 
     const personExists = persons.filter((person) => person.name === newName);
