@@ -13,10 +13,15 @@ const update = (id, newPerson) => {
   return axios.put(`${baseUrl}/${id}`, newPerson)
 }
 
+const remove = (id) => {
+  return axios.delete(`${baseUrl}/${id}`)
+}
+
 const crud = {
     getAll: getAll, 
     create: create, 
-    update: update 
+    update: update, 
+    remove: remove,
 }
 
 export default crud
