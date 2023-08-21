@@ -21,14 +21,17 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
+    console.log('effect');
+    axios.get('http://localhost:3001/persons')
       .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+        console.log('promise fulfilled');
+        setPersons(response.data);
       })
-  }, [])
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+  
 
   const addPerson = (e) => {
     e.preventDefault()
