@@ -1,5 +1,19 @@
 import { useEffect, useState } from 'react';
 import crud from './services/persons';
+import './index.css'
+
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className='success'>
+      {message}
+    </div>
+  )
+}
+
 
 const Person = ({ name, number, onDelete }) => {
   return (
@@ -17,6 +31,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [successMessage, setSuccessMessage] = useState('Person added successfully');
 
   useEffect(() => {
     crud
@@ -106,6 +121,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
       <div>
         <p>
           Search: <input value={searchTerm} onChange={handleSearchTerm} />
