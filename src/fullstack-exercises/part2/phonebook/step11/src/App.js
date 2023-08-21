@@ -31,7 +31,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [successMessage, setSuccessMessage] = useState('Person added successfully');
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     crud
@@ -65,6 +65,14 @@ const App = () => {
             );
             setNewName('');
             setNewPhoneNumber('');
+
+            setSuccessMessage(
+              `Updated '${response.data.name}' `
+            )
+            setTimeout(() => {
+              setSuccessMessage(null)
+            }, 3000)
+
           })
           .catch(error => {
             console.error('Error updating person:', error);
@@ -82,6 +90,12 @@ const App = () => {
           setPersons([...persons, response.data]);
           setNewName('');
           setNewPhoneNumber('');
+
+          setSuccessMessage(`Added '${response.data.name}' `);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 3000);
+
         })
         .catch(error => {
           console.error('Error adding new person:', error);
