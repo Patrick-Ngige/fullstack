@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react'
 
 
 const Person = ({person}) => {
-  if (!person || !person.phoneNumber || !person.phoneNumber.number) {
+  if (!person.name || !person.number ) {
     return <p>Error: Missing data</p>;
   }
   return (
     <>
-    <p>{person.name}: {person.phoneNumber.number}</p>
+    <p>{person.name}: {person.number}</p>
     </>
   )
 }
