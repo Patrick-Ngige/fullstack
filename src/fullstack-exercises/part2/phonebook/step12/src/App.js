@@ -2,18 +2,17 @@ import { useEffect, useState } from 'react';
 import crud from './services/persons';
 import './index.css'
 
-const Notification = ({ message }) => {
+const Notification = ({ message, className }) => {
   if (message === null) {
-    return null
+    return null;
   }
 
   return (
-    <div className='success'>
+    <div className={className}>
       {message}
     </div>
-  )
+  );
 }
-
 
 const Person = ({ name, number, onDelete }) => {
   return (
@@ -21,7 +20,6 @@ const Person = ({ name, number, onDelete }) => {
       <p>
         {name}: {number} <button onClick={onDelete}>Delete</button>
       </p>
-      
     </>
   );
 };
@@ -32,6 +30,7 @@ const App = () => {
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     crud
@@ -68,13 +67,18 @@ const App = () => {
 
             setSuccessMessage(
               `Updated '${response.data.name}' `
-            )
+            );
             setTimeout(() => {
-              setSuccessMessage(null)
-            }, 3000)
-
+              setSuccessMessage(null);
+            }, 3000);
           })
           .catch(error => {
+            setErrorMessage(
+              `Failed to update '${existingPerson.name}' `
+            );
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 3000);
             console.error('Error updating person:', error);
           });
       }
@@ -95,9 +99,14 @@ const App = () => {
           setTimeout(() => {
             setSuccessMessage(null);
           }, 3000);
-
         })
         .catch(error => {
+          setErrorMessage(
+            `Failed to add '${newPerson.name}' `
+          );
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 3000);
           console.error('Error adding new person:', error);
         });
     }
@@ -135,7 +144,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} />
+      <Notification message={successMessage} className="success" />
+      <Notification message={errorMessage} className="error" />
       <div>
         <p>
           Search: <input value={searchTerm} onChange={handleSearchTerm} />
