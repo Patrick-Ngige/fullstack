@@ -74,12 +74,11 @@ const App = () => {
           })
           .catch(error => {
             setErrorMessage(
-              `Failed to update '${existingPerson.name}' `
-            );
+              `Failed, the person was removed from server`
+            )
             setTimeout(() => {
-              setErrorMessage(null);
-            }, 3000);
-            console.error('Error updating person:', error);
+              setErrorMessage(null)
+            }, 5000)
           });
       }
     } else {
@@ -113,14 +112,24 @@ const App = () => {
   };
 
   const deletePerson = id => {
-    if (window.confirm('Are you sure you want to delete this person?')) {
+    const personToDelete = persons.find(person => person.id === id);
+    if (window.confirm(`Are you sure you want to delete '${personToDelete.name}'`)) {
       crud
         .remove(id)
         .then(() => {
           setPersons(persons.filter(person => person.id !== id));
+
+          setSuccessMessage(`Deleted '${personToDelete.name}' `);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 3000);
+
         })
         .catch(error => {
-          console.error('Error deleting person:', error);
+          setErrorMessage(`Failed to delete '${personToDelete.name}'`);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 3000);
         });
     }
   };
